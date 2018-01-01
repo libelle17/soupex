@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<s:Envelope s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+  <s:Body>
+    <u:GetStatusInfo xmlns:u="urn:dslforum-org:service:X_AVM-DE_OnTel:1" />
+  </s:Body>
+</s:Envelope>

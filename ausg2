@@ -1,0 +1,145 @@
+data: <?xml version="1.0" encoding="utf-8"?><SessionInfo><SID>0000000000000000</SID><Challenge>7bb59261</Challenge><BlockTime>0</BlockTime><Rights></Rights></SessionInfo>
+
+0000000000000000
+7bb59261
+data: <?xml version="1.0" encoding="utf-8"?><SessionInfo><SID>7210fd1cb57f505d</SID><Challenge>8ff866db</Challenge><BlockTime>0</BlockTime><Rights><Name>Dial</Name><Access>2</Access><Name>App</Name><Access>2</Access><Name>HomeAuto</Name><Access>2</Access><Name>BoxAdmin</Name><Access>2</Access><Name>Phone</Name><Access>2</Access><Name>NAS</Name><Access>2</Access></Rights></SessionInfo>
+
+7210fd1cb57f505d
+7210fd1cb57f505d
+eingel: 1
+<script>if (typeof jxl === 'undefined') {
+location.href = "/";
+}
+</script>
+
+
+<style type="text/css">
+div.incomingnumbers {
+width:100px;
+}
+</style>
+<style type="text/css">@media (max-width: 700px)
+#uiTimeCtrlOptions {
+display: none;
+}
+main .switch_on,
+main .switch_off,
+main .switch_on:active,
+main .switch_off:active {
+background-color: transparent;
+}
+@media screen and (max-width: 900px) {
+#uiFondevicesTbl tr {
+display: block;
+}
+#uiFondevicesTbl td {
+display: block;
+text-align: right;
+width: auto;
+}
+#uiFondevicesTbl td[datalabel]::before {
+content: attr(datalabel);
+float: left;
+}
+#uiFondevicesTbl td:not([datalabel]) {
+display: none;
+}
+#uiFondevicesTbl tr td[datalabel]:last-child {
+padding-bottom: 0.125rem;
+}
+#uiFondevicesTbl tr.thead {
+display: none;
+}
+#uiFondevicesTbl td[datalabel] div.incomingnumbers {
+width: auto;
+}
+#uiFondevicesTbl td.name[datalabel] {
+font-weight: bold;
+text-align: left;
+}
+#uiFondevicesTbl td.name[datalabel] span {
+display: none;
+}
+#uiFondevicesTbl td[datalabel] button.switch_on,
+#uiFondevicesTbl td[datalabel] button.switch_off {
+width: auto;
+background-position: right;
+}
+main .formular.mobile_left {
+padding: 0 0 0 0;
+}
+main table .btncolumn button.icon,
+main .formular table .btncolumn button.icon {
+width:5rem;
+height:1.8rem;
+margin:0.2rem;
+}
+}
+</style>
+
+
+<form id="uiMainForm" class="narrow" name="main_form" method="POST" action="/fon_devices/fondevices_list.lua?sid=7210fd1cb57f505d">
+<p >
+Hier können Sie alle mit der FRITZ!Box verbundenen und integrierten Telefoniegeräte wie Telefone, Anrufbeantworter, Faxgeräte und Türsprechanlagen einrichten und bearbeiten.
+</p>
+
+<div class="print">
+<table id="uiFondevicesTbl" class="zebra print">
+<tr class="thead">
+<th class="sortable">Name<span class="sort_no">&nbsp;</span></th>
+<th class="sortable">Anschluss<span class="sort_no">&nbsp;</span></th>
+<th class="sortable">Rufnummer<br>ausgehend<span class="sort_no">&nbsp;</span></th>
+<th class="sortable"><br>ankommend<span class="sort_no">&nbsp;</span></th>
+<th class="sortable"><br>intern<span class="sort_no">&nbsp;</span></th>
+<th class="buttonrow print"></th>
+<th class="btncolumn"></th>
+</tr>
+<tr>
+<td title="USR-1" class="name" datalabel="USR-1"><span class="print">USR-1</span></td>
+<td datalabel="Anschluss">FON 1</td><td datalabel="Rufnummer ausgehend">616381</td>
+<td datalabel="Rufnummer ankommend"><div class="incomingnumbers" id="uiIncommingNumbersfon1230">616381</div></td><td datalabel="Rufnummer intern">**1</td><td class="buttonrow print"></td><td datalabel="" class="btncolumn"><button type="submit" name="edit" value="1" class="icon edit" title="Bearbeiten" id="edit_protocol"></button><button onclick="return onDeleteClick(value);" type="submit" name="delete" value="1" class="icon delete" title="Löschen" id="delete_protocol"></button></td></tr><tr>
+<td title="USR-2" class="name" datalabel="USR-2"><span class="print">USR-2</span></td>
+<td datalabel="Anschluss">FON 2</td><td datalabel="Rufnummer ausgehend">616381</td>
+<td datalabel="Rufnummer ankommend"><div class="incomingnumbers" id="uiIncommingNumbersfon1231">616381</div></td><td datalabel="Rufnummer intern">**2</td><td class="buttonrow print"></td><td datalabel="" class="btncolumn"><button type="submit" name="edit" value="2" class="icon edit" title="Bearbeiten" id="edit_protocol"></button><button onclick="return onDeleteClick(value);" type="submit" name="delete" value="2" class="icon delete" title="Löschen" id="delete_protocol"></button></td></tr><tr>
+<td title="Anrufbeantworter" class="name" datalabel="Anrufbeantworter"><span class="print">Anrufbeantworter</span></td>
+<td datalabel="Anschluss">integriert</td><td datalabel="Rufnummer ausgehend">-</td>
+<td datalabel="Rufnummer ankommend"><div class="incomingnumbers" id="uiIncommingNumberstam0">deaktiviert</div></td><td datalabel="Rufnummer intern">**600</td><td class="buttonrow print" datalabel="Aus / An"><button type="button" onClick="abSwitch.toggle('0', '7210fd1cb57f505d')" id="uiSwitch0" class="switch_off"></button></td><td datalabel="" class="btncolumn"><button type="submit" name="edit" value="80" class="icon edit" title="Bearbeiten" id="edit_protocol"></button><button onclick="return onDeleteClick(value);" type="submit" name="delete" value="80" class="icon delete" title="Löschen" id="delete_protocol"></button></td></tr><tr>
+<td title="Faxfunktion" class="name" datalabel="Faxfunktion"><span class="print">Faxfunktion</span></td>
+<td datalabel="Anschluss">integriert</td><td datalabel="Rufnummer ausgehend">-</td>
+<td datalabel="Rufnummer ankommend"><div class="incomingnumbers" id="uiIncommingNumbersfaxintern0">616381</div></td><td></td><td class="buttonrow print"></td><td datalabel="" class="btncolumn"><button type="submit" name="edit" value="100" class="icon edit" title="Bearbeiten" id="edit_protocol"></button><button onclick="return onDeleteClick(value);" type="submit" name="delete" value="100" class="icon delete" title="Löschen" id="delete_protocol"></button></td></tr></table>
+</div>
+
+<div id="btn_form_foot">
+<button type="button" id="uiPrintList" name="print_list" onclick="uiDoPrint()" >Liste drucken</button>
+<button type="submit" id="uiNewDevice" name="new_device"  onclick="uiShowNoNumber()">Neues Gerät einrichten</button>
+</div>
+</form>
+<input id="oldPageXhrSid" type="hidden" value="7210fd1cb57f505d"><input id="fdhidedata" type="hidden" value="{&quot;ipv6&quot;:true,&quot;liveTv&quot;:true,&quot;dectMoni&quot;:true,&quot;provServ&quot;:true,&quot;dectMoniEx&quot;:true,&quot;rss&quot;:true,&quot;mobile&quot;:true,&quot;dectDev&quot;:true,&quot;dectMail&quot;:true,&quot;ssoSet&quot;:true,&quot;liveImg&quot;:true}"><input id="oldpageactive" type="hidden" value="/fon_devices/fondevices_list.lua"><input id="oldPageTitle" type="hidden" value=""><input id="gHelpPage" type="hidden" value="hilfe_fon_fondevices.html"><div id="domReady" style="display:none"></div>
+
+<script type="text/javascript" src="/js/validate.js"></script>
+<script type="text/javascript" src="/js/focuschanger.js"></script>
+<script type="text/javascript" src="/js/tam_switch.js"></script>
+<script type="text/javascript">
+var sort=sorter();
+function onDeleteClick(value){
+var msgArray = {"1":"Wenn der Eintrag aus der FRITZ!Box entfernt wird, können Sie auf dem Telefon > Anrufbeantworter > Faxgerät nicht mehr angerufen werden.\n\nMöchten Sie den Eintrag trotzdem entfernen?","2":"Wenn der Eintrag aus der FRITZ!Box entfernt wird, können Sie auf dem Telefon > Anrufbeantworter > Faxgerät nicht mehr angerufen werden.\n\nMöchten Sie den Eintrag trotzdem entfernen?","100":"Wenn der Eintrag aus der FRITZ!Box entfernt wird, können Sie keine Faxe mehr empfangen.\n\nMöchten Sie den Eintrag trotzdem entfernen?","80":"Wollen Sie den Eintrag für dieses Gerät löschen?","50":"Wenn der Eintrag aus der FRITZ!Box entfernt wird, können Sie an diesem Gerät weiterhin Anrufe empfangen, aber keine Einstellungen mehr vornehmen.\n\nMöchten Sie den Eintrag trotzdem entfernen?"};
+var check = confirm(msgArray[value]);
+if (!check)
+return false;
+}
+function uiDoPrint() {
+main.showPrintView();
+}
+function uiShowNoNumber() {
+if (false)
+alert("Es sind keine Rufnummern eingerichtet. Richten Sie jetzt Ihre Rufnummern ein, bevor Sie mit dem Einrichten Ihres Telefoniegerätes fortfahren.");
+}
+function initTableSorter() {
+sort.init("uiFondevicesTbl");
+sort.setDirection(0,-1);
+sort.sort_table(0);
+}
+ready.onReady(initTableSorter);
+</script>
+
+

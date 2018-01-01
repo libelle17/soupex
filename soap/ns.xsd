@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+  <schema targetNamespace="http://tempuri.org/ns.xsd"
+    xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+    xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:ns="http://tempuri.org/ns.xsd"
+    xmlns="http://www.w3.org/2001/XMLSchema"
+    elementFormDefault="unqualified"
+    attributeFormDefault="unqualified">
+    <import namespace="http://schemas.xmlsoap.org/soap/encoding/"/>
+    <!-- operation request element -->
+    <element name="hello">
+      <complexType>
+          <sequence>
+            <element name="name" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__hello::name -->
+          </sequence>
+      </complexType>
+    </element>
+    <!-- operation response element -->
+    <element name="helloResponse">
+      <complexType>
+          <sequence>
+            <element name="greeting" type="xsd:string" minOccurs="1" maxOccurs="1"/><!-- ns__hello::greeting -->
+          </sequence>
+      </complexType>
+    </element>
+  </schema>
+

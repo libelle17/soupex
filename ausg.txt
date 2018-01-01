@@ -1,0 +1,119 @@
+data: <?xml version="1.0" encoding="utf-8"?><SessionInfo><SID>0000000000000000</SID><Challenge>a7901138</Challenge><BlockTime>0</BlockTime><Rights></Rights></SessionInfo>
+
+0000000000000000
+a7901138
+data: <?xml version="1.0" encoding="utf-8"?><SessionInfo><SID>fd6c395eff5b56b5</SID><Challenge>a0093f45</Challenge><BlockTime>0</BlockTime><Rights><Name>Dial</Name><Access>2</Access><Name>App</Name><Access>2</Access><Name>HomeAuto</Name><Access>2</Access><Name>BoxAdmin</Name><Access>2</Access><Name>Phone</Name><Access>2</Access><Name>NAS</Name><Access>2</Access></Rights></SessionInfo>
+
+fd6c395eff5b56b5
+fd6c395eff5b56b5
+eingel: 1
+data: '<script>if (typeof jxl === 'undefined') {
+location.href = "/";
+}
+</script>
+
+
+<style type="text/css">
+main th.iconrow, main td.iconrow {
+width:3.6rem;
+}
+@media screen and (max-width: 900px) {
+#uiViewFonNumTable tr {
+display: block;
+}
+#uiViewFonNumTable td {
+display: block;
+text-align: right;
+width: auto;
+}
+#uiViewFonNumTable td[datalabel]::before {
+content: attr(datalabel);
+float: left;
+}
+#uiViewFonNumTable td:not([datalabel]) {
+display: none;
+}
+#uiViewFonNumTable tr td[datalabel]:last-child {
+padding-bottom: 0.125rem;
+}
+#uiViewFonNumTable tr.thead {
+display: none;
+}
+#uiViewFonNumTable td[datalabel] div.incomingnumbers {
+width: auto;
+}
+#uiViewFonNumTable td.iconrow[datalabel]::before {
+content: attr(datalabel);
+float: left;
+font-weight: bold;
+}
+#uiViewFonNumTable td[datalabel].iconrow.led_green,
+#uiViewFonNumTable td[datalabel].iconrow.led_gray {
+padding-top: 0.25rem;
+padding-left: 1.25rem;
+}
+#uiViewFonNumTable td[datalabel].iconrow {
+width: auto;
+background-position: left;
+}
+main .formular.mobile_left {
+padding: 0 0 0 0;
+}
+main table .btncolumn button.icon,
+main .formular table .btncolumn button.icon {
+width:5rem;
+height:1.8rem;
+margin:0.2rem;
+}
+}
+</style>
+
+
+<form id="main_form" method="POST" action="/fon_num/fon_num_list.lua?sid=fd6c395eff5b56b5">
+<div>
+<p>Auf dieser Seite können Sie Ihre eigenen Rufnummern einrichten und bearbeiten.</p>
+<hr>
+</div>
+<table id="uiViewFonNumTable" class="zebra print">
+<tr class="thead">
+<th class="sortable sort_by_class iconrow">Status</th>
+<th class="sortable">Rufnummer<span class="sort_no">&nbsp;</span></th>
+<th class="sortable">Anschluss<span class="sort_no">&nbsp;</span></th>
+<th class="sortable">Anbieter<span class="sort_no">&nbsp;</span></th>
+<th class="sortable">Vorauswahl<span class="sort_no">&nbsp;</span></th>
+<th class="btncolumn"></th>
+</tr>
+<tr><td class="iconrow led_green" datalabel="616379"></td><td title="">616379</td><td datalabel="Anschluss">Internet</td><td datalabel="Anbieter">phone.mnet-voip.de</td><td datalabel="Vorauswahl">*121#</td><td class="btncolumn" datalabel=""><button type="submit" class="icon edit" id="edit_sip:sip0" name="edit" value="sip:sip0" title="Bearbeiten"></button><button type="submit" class="icon edit" id="" style="visibility:hidden;" name="" value="" title="" disabled ></button></td>
+</tr><tr><td class="iconrow led_green" datalabel="619710"></td><td title="">619710</td><td datalabel="Anschluss">Internet</td><td datalabel="Anbieter">phone.mnet-voip.de</td><td datalabel="Vorauswahl">*122#</td><td class="btncolumn" datalabel=""><button type="submit" class="icon edit" id="edit_sip:sip1" name="edit" value="sip:sip1" title="Bearbeiten"></button><button type="submit" class="icon edit" id="" style="visibility:hidden;" name="" value="" title="" disabled ></button></td>
+</tr><tr><td class="iconrow led_green" datalabel="619709"></td><td title="">619709</td><td datalabel="Anschluss">Internet</td><td datalabel="Anbieter">phone.mnet-voip.de</td><td datalabel="Vorauswahl">*123#</td><td class="btncolumn" datalabel=""><button type="submit" class="icon edit" id="edit_sip:sip2" name="edit" value="sip:sip2" title="Bearbeiten"></button><button type="submit" class="icon edit" id="" style="visibility:hidden;" name="" value="" title="" disabled ></button></td>
+</tr><tr><td class="iconrow led_green" datalabel="616380"></td><td title="">616380</td><td datalabel="Anschluss">Internet</td><td datalabel="Anbieter">phone.mnet-voip.de</td><td datalabel="Vorauswahl">*124#</td><td class="btncolumn" datalabel=""><button type="submit" class="icon edit" id="edit_sip:sip3" name="edit" value="sip:sip3" title="Bearbeiten"></button><button type="submit" class="icon edit" id="" style="visibility:hidden;" name="" value="" title="" disabled ></button></td>
+</tr><tr><td class="iconrow led_green" datalabel="619714"></td><td title="">619714</td><td datalabel="Anschluss">Internet</td><td datalabel="Anbieter">phone.mnet-voip.de</td><td datalabel="Vorauswahl">*125#</td><td class="btncolumn" datalabel=""><button type="submit" class="icon edit" id="edit_sip:sip4" name="edit" value="sip:sip4" title="Bearbeiten"></button><button type="submit" class="icon edit" id="" style="visibility:hidden;" name="" value="" title="" disabled ></button></td>
+</tr><tr><td class="iconrow led_green" datalabel="619711"></td><td title="">619711</td><td datalabel="Anschluss">Internet</td><td datalabel="Anbieter">phone.mnet-voip.de</td><td datalabel="Vorauswahl">*126#</td><td class="btncolumn" datalabel=""><button type="submit" class="icon edit" id="edit_sip:sip5" name="edit" value="sip:sip5" title="Bearbeiten"></button><button type="submit" class="icon edit" id="" style="visibility:hidden;" name="" value="" title="" disabled ></button></td>
+</tr><tr><td class="iconrow led_green" datalabel="616381"></td><td title="">616381</td><td datalabel="Anschluss">Internet</td><td datalabel="Anbieter">phone.mnet-voip.de</td><td datalabel="Vorauswahl">*127#</td><td class="btncolumn" datalabel=""><button type="submit" class="icon edit" id="edit_sip:sip6" name="edit" value="sip:sip6" title="Bearbeiten"></button><button type="submit" class="icon edit" id="" style="visibility:hidden;" name="" value="" title="" disabled ></button></td>
+</tr><tr><td class="iconrow led_green" datalabel="619712"></td><td title="">619712</td><td datalabel="Anschluss">Internet</td><td datalabel="Anbieter">phone.mnet-voip.de</td><td datalabel="Vorauswahl">*128#</td><td class="btncolumn" datalabel=""><button type="submit" class="icon edit" id="edit_sip:sip7" name="edit" value="sip:sip7" title="Bearbeiten"></button><button type="submit" class="icon edit" id="" style="visibility:hidden;" name="" value="" title="" disabled ></button></td>
+</tr><tr><td class="iconrow led_green" datalabel="619713"></td><td title="">619713</td><td datalabel="Anschluss">Internet</td><td datalabel="Anbieter">phone.mnet-voip.de</td><td datalabel="Vorauswahl">*129#</td><td class="btncolumn" datalabel=""><button type="submit" class="icon edit" id="edit_sip:sip8" name="edit" value="sip:sip8" title="Bearbeiten"></button><button type="submit" class="icon edit" id="" style="visibility:hidden;" name="" value="" title="" disabled ></button></td>
+</tr><tr><td class="iconrow led_green" datalabel="619708"></td><td title="">619708</td><td datalabel="Anschluss">Internet</td><td datalabel="Anbieter">phone.mnet-voip.de</td><td datalabel="Vorauswahl">*120#</td><td class="btncolumn" datalabel=""><button type="submit" class="icon edit" id="edit_sip:sip9" name="edit" value="sip:sip9" title="Bearbeiten"></button><button type="submit" class="icon edit" id="" style="visibility:hidden;" name="" value="" title="" disabled ></button></td>
+</tr>
+</table>
+<input type="hidden" name="back_to_page" value="/fon_num/fon_num_list.lua"><div id="btn_form_foot">
+<button type="button" name="print" onclick="uiDoShowPrintView()">Liste drucken</button><button type="submit" name="btn_new_num" id="btnNewNum">Neue Rufnummer</button></div>
+</form>
+<input id="oldPageXhrSid" type="hidden" value="fd6c395eff5b56b5"><input id="fdhidedata" type="hidden" value="{&quot;ipv6&quot;:true,&quot;liveTv&quot;:true,&quot;dectMoni&quot;:true,&quot;provServ&quot;:true,&quot;dectMoniEx&quot;:true,&quot;rss&quot;:true,&quot;mobile&quot;:true,&quot;dectDev&quot;:true,&quot;dectMail&quot;:true,&quot;ssoSet&quot;:true,&quot;liveImg&quot;:true}"><input id="oldpageactive" type="hidden" value="/fon_num/fon_num_list.lua"><input id="oldPageTitle" type="hidden" value=""><input id="gHelpPage" type="hidden" value="hilfe_fon_internetliste.html"><div id="domReady" style="display:none"></div>
+
+
+<script type="text/javascript">
+var sort=sorter();
+function delConfirmation(number) {
+return confirm('Die Rufnummer "' + number + '" löschen?');
+}
+function uiDoShowPrintView() {
+main.showPrintView();
+}
+function initTableSorter() {
+sort.init("uiViewFonNumTable");
+sort.sort_table(0);
+}
+ready.onReady(initTableSorter);
+</script>
+
+'

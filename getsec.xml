@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"
+  s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+  <s:Body><u:GetSecurityPort xmlns:u="urn:dslforum-
+      org:service:DeviceInfo:1"></u:GetSecurityPort>
+  </s:Body>
+</s:Envelope>

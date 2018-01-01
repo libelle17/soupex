@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Envelope s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+  xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" >
+  <s:Header>
+    <h:InitChallenge
+      xmlns:h="http://soap-authentication.org/digest/2001/10/"
+      s:mustUnderstand="1">
+      <UserID>libelle17</UserID>
+    </h:InitChallenge >
+  </s:Header>
+  <s:Body>
+    <u:GetHostNumberOfEntries xmlns:u="urn:dslforum-org:service:Hosts:1">
+    </u:GetHostNumberOfEntries>
+  </s:Body>
+</s:Envelope>
