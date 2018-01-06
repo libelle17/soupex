@@ -47,7 +47,7 @@
 static gconstpointer net_event;
 
 struct capi_connection *active_capi_connection = NULL;
-
+#undef false
 #ifdef false
 /**
  * \brief Dial number via fax

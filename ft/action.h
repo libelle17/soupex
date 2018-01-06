@@ -24,7 +24,7 @@
 
 G_BEGIN_DECLS
 
-#include "profile.h"
+//#include "profile.h"
 
 /** ACTION_XXXX_YYYY flags */
 #define ACTION_INCOMING_RING   0x01

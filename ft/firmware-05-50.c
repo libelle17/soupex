@@ -24,14 +24,14 @@
 
 #include <glib.h>
 
-#include <libroutermanager/profile.h>
-#include <libroutermanager/file.h>
-#include <libroutermanager/logging.h>
-#include <libroutermanager/network.h>
-#include <libroutermanager/csv.h>
-#include <libroutermanager/ftp.h>
-#include <libroutermanager/call.h>
-#include <libroutermanager/gstring.h>
+//#include "profile.h"
+#include "file.h"
+#include "logging.h"
+#include "network.h"
+#include "csv.h"
+#include "ftp.h"
+#include "call.h"
+#include "gstring.h"
 
 #include "fritzbox.h"
 #include "csv.h"

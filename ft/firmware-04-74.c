@@ -23,7 +23,7 @@
 
 #include <glib.h>
 
-#include "profile.h"
+//#include "profile.h"
 #include "appobject-emit.h"
 #include "logging.h"
 #include "network.h"

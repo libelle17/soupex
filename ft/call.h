@@ -21,7 +21,7 @@
 #define LIBROUTERMANAGER_CALL_H
 
 #include "contact.h"
-#include "profile.h"
+// #include "profile.h"
 
 G_BEGIN_DECLS
 

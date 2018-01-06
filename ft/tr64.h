@@ -1,3 +1,4 @@
+#include <stdlib.h> // für EXIT_FAILURE
 #include <curl/curl.h>
 
 size_t holraus(const std::string xml,std::string tag,std::string *ergp,size_t anf=0); // XML-Inhalt ermitteln

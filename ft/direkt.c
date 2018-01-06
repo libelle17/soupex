@@ -73,7 +73,7 @@ again:
 }
 
 // aus main_cli.c
-#include <config.h>
+#include "config.h"
 #undef _
 #define _(x) x
 static gboolean debug = FALSE;
@@ -226,7 +226,7 @@ int main(int argc, char** argv)
 		g_signal_connect(app_object, "connection-terminated", G_CALLBACK(capi_connection_terminated_cb), NULL);
 
 //	system("gs -q -dNOPAUSE -dSAFER -dBATCH -sDEVICE=tiffg4 -sPAPERSIZE=a4 -dFIXEDMEDIA -r204x98 -sOutputFile=t0.pdf.tif ~/rogerj/wand/t0.pdf");
-	system("gs -q -dNOPAUSE -dSAFER -dBATCH -sDEVICE=tiffg4 -sPAPERSIZE=a4 -dFIXEDMEDIA -r204x196 -sOutputFile=t0.pdf.tif ~/rogerj/wand/t0.pdf");
+	system("gs -q -dNOPAUSE -dSAFER -dBATCH -sDEVICE=tiffg4 -sPAPERSIZE=a4 -dFIXEDMEDIA -r204x196 -sOutputFile=t0.pdf.tif /DATA/down/t0.pdf");
 	// gpointer user_data;
 	fbcl fb;
 	if(argc>1) fb.controller=atoi(argv[1]);
@@ -235,7 +235,7 @@ int main(int argc, char** argv)
 		// exit(0);
 		// aus fax_dial
 		struct capi_connection * conn=fax_send((gchar*)"t0.pdf.tif",/*modem,3=14400*/3,/*ecm*/1,/*controller*/5,/*cip,4=speech,0x11=fax,geht beides*/4,
-				(gchar*)"6150166",(gchar*)"619712",/*lsi*/(gchar*)"+496150166",/*local_header_info*/(gchar*)"G.Schade",/*return error code*/0);
+				(gchar*)"616381",(gchar*)"6150166",/*lsi*/(gchar*)"+49616381",/*local_header_info*/(gchar*)"G.Schade",/*return error code*/0);
 		/* Create and start g_main_loop */
 
 		printf("Vor main_loop\n");

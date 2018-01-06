@@ -29,9 +29,9 @@
 #	firmware-04-00.c \
 #	ftp.c \
 #	fritzbox.c \
+  # -I/home/schade/rogerj/wand \
+  # -I/home/schade/rogerj/wand/libroutermanager \
 F=direkt; g++ $F.c \
-  -I/home/schade/rogerj/wand \
-  -I/home/schade/rogerj/wand/libroutermanager \
 	routermanager.c \
 	faxophone.c \
 	fax_phone.c \
