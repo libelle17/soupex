@@ -16,8 +16,8 @@
 #include "/home/schade/rogerj/wand/libroutermanager/logging.h"
 #include "/home/schade/rogerj/wand/libroutermanager/net_monitor.h"
 #include "/home/schade/rogerj/wand/libroutermanager/routermanager.h"
-/*
 #include "/home/schade/rogerj/wand/libroutermanager/router.h"
+/*
 #include "/home/schade/rogerj/wand/libroutermanager/routermanager.h"
 */
 
@@ -228,6 +228,79 @@ void fbcl::fb_login_05_50()
   g_object_unref(msg);
   g_object_unref(soup_session);
 }
+// aus router.c
+/** Active router structure */
+static struct router *active_router = NULL;
+/** Global router plugin list */
+static GSList *router_list = NULL;
+/** Router login blocked shield */
+static gboolean router_login_blocked = FALSE;
+/**
+ * \brief Check if router is present
+ * \param router_info router information structure
+ * \return present state
+ */
+gboolean router_present(struct router_info *router_info)
+{
+	GSList *list;
+
+	g_debug("%s(): called", __FUNCTION__);
+	if (!router_list) {
+		return FALSE;
+	}
+
+	for (list = router_list; list != NULL; list = list->next) {
+		struct router *router = (struct router*)list->data;
+
+		if (router->present(router_info)) {
+			active_router = router;
+			return TRUE;
+		}
+	}
+
+	return FALSE;
+}
+/**
+ * \brief Register new router
+ * \param router new router structure
+ */
+gboolean routermanager_router_register(struct router *router)
+{
+	router_list = g_slist_prepend(router_list, router);
+
+	return TRUE;
+}
+/**
+ * \brief Initialize router (if available set internal router structure)
+ * \return TRUE on success, otherwise FALSE
+ */
+gboolean router_init(void)
+{
+	if (g_slist_length(router_list)) {
+		return TRUE;
+	}
+
+	g_warning("No router plugin registered!");
+	return FALSE;
+}
+/**
+ * \brief Shutdown router
+ * \return TRUE
+ */
+void router_shutdown(void)
+{
+	/* Free router list */
+	if (router_list != NULL) {
+		g_slist_free(router_list);
+		router_list = NULL;
+	}
+
+	/* Unset active router */
+	active_router = NULL;
+}
+
+
+
 
 
 /**
@@ -810,6 +883,35 @@ struct capi_connection *fax_send_hier(gchar *tiff_file, gint modem, gint ecm, gi
 gboolean faxophone_connect(gpointer user_data);
 gboolean faxophone_disconnect(gpointer user_data);
 
+// 4.1.18, aus fax_phone.c
+struct capi_connection *active_capi_connection = NULL;
+
+// 4.1.18, aus connection.c
+/** Global connect list pointer */
+static GSList *connection_list = NULL;
+/**
+ * \brief Find connection entry by number
+ * \param remote_number connection number
+ * \return connection pointer or NULL on error
+ */
+struct connection *connection_find_by_number(const gchar *remote_number)
+{
+	GSList *list = connection_list;
+	struct connection *connection;
+
+	while (list) {
+		connection = (struct connection*)list->data;
+
+		if (!strcmp(connection->remote_number, remote_number)) {
+			return connection;
+		}
+
+		list = list->next;
+	}
+
+	return NULL;
+}
+
 /**
  * \brief Connection ring handler
  * \param connection capi connection structure
@@ -1208,9 +1310,12 @@ printf("5 !!!!!!!!!!!!!!!!!!!\n");
 	//routermanager_shutdown();
 	/* Destroy app_object */
 	g_clear_object(&app_object);
+	printf("nach clear_app\n");
 
 	/* Shutdown logging */
 	log_shutdown();
+	printf("nach log_shutdown\n");
 
-	faxophone_disconnect(user_data);
+	// faxophone_disconnect(user_data);
+	printf("nach disconnect\n");
 }

@@ -23,21 +23,27 @@
 	# /home/schade/rogerj/wand/libroutermanager/ssdp.c \
 	# /home/schade/rogerj/wand/libroutermanager/libfaxophone/sff.c \
 
+	# router.c \
+
+#	firmware-common.c \
+#	firmware-04-00.c \
+#	ftp.c \
+#	fritzbox.c \
 F=direkt; g++ $F.c \
   -I/home/schade/rogerj/wand \
   -I/home/schade/rogerj/wand/libroutermanager \
-	network.c \
 	routermanager.c \
-	net_monitor.c \
 	faxophone.c \
-	phone.c \
-	isdn-convert.c \
 	fax.c \
-	audio.c \
-	logging.c \
 	appobject-emit.c \
-	file.c \
+	phone.c \
+	logging.c \
 	appobject.c \
+	network.c \
+	audio.c \
+	net_monitor.c \
+	isdn-convert.c \
+	file.c \
   $(pkg-config --cflags --libs libsoup-2.4) \
 	-ltiff -lspandsp -lrt -ldl -lsndfile -lsoup-2.4 -lgssdp-1.0 -lgupnp-1.0 -lcapi20\
 	-o$F \
