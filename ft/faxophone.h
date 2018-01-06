@@ -190,5 +190,7 @@ int capi_pickup(struct capi_connection *connection, int type);
 struct session *faxophone_get_session(void);
 struct session *faxophone_init(struct session_handlers *handlers, const char *host, gint controller);
 int faxophone_close(int force);
-
+// GSchade 6.1.18
+extern struct session *session;
+extern struct session_handlers session_handlers;
 #endif

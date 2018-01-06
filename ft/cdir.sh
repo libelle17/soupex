@@ -34,6 +34,7 @@ F=direkt; g++ $F.c \
   -I/home/schade/rogerj/wand/libroutermanager \
 	routermanager.c \
 	faxophone.c \
+	fax_phone.c \
 	fax.c \
 	appobject-emit.c \
 	phone.c \
@@ -44,8 +45,11 @@ F=direkt; g++ $F.c \
 	net_monitor.c \
 	isdn-convert.c \
 	file.c \
+	connection.c \
+	tr64.cpp \
   $(pkg-config --cflags --libs libsoup-2.4) \
 	-ltiff -lspandsp -lrt -ldl -lsndfile -lsoup-2.4 -lgssdp-1.0 -lgupnp-1.0 -lcapi20\
+	-lcurl \
 	-o$F \
   >fehler 2>&1 \
   &&{ :||$F;:;} \

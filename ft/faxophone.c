@@ -38,13 +38,24 @@
 // #define FAXOPHONE_DEBUG 1
 
 /** The current active session */
-static struct session *session = NULL;
+// 'ph' von GSchade 6.1.18
+static struct session *phsession = NULL;
 /** Unique connection id */
 static unsigned int id = 0;
 /** capi thread pointer */
 static GThread *capi_thread = NULL;
 /** quit capi loop thread flag */
 static unsigned char faxophone_quit = 1;
+// GSchade 6.1.18
+#undef isdn_lock
+#undef isdn_unlock
+#ifdef USE_ISDN_MUTEX
+#define isdn_lock() if (phsession) do { g_mutex_lock(&phsession->isdn_mutex); } while (0);
+#define isdn_unlock() if (phsession) do { g_mutex_unlock(&phsession->isdn_mutex); } while (0);
+#else
+#define isdn_lock()
+#define isdn_unlock()
+#endif
 
 /**
  * \brief Dump capi error (UNUSED)
@@ -59,8 +70,8 @@ static void capi_error(long error)
 		} else if (error == 0x2001) {
 			g_warning("Message not supported in current state");
 		}
-		if (session) {
-			session->handlers->status(NULL, error);
+		if (phsession) {
+			phsession->handlers->status(NULL, error);
 		}
 	}
 }
@@ -118,15 +129,15 @@ struct capi_connection *capi_get_free_connection(void)
 {
 	int i;
 
-	if (!session) {
+	if (!phsession) {
 		return NULL;
 	}
 
 	for (i = 0; i < CAPI_CONNECTIONS; i++) {
-		if (session->connection[i].plci == 0 && session->connection[i].ncci == 0) {
-			session->connection[i].id = id++;
-			session->connection[i].state = STATE_IDLE;
-			return &session->connection[i];
+		if (phsession->connection[i].plci == 0 && phsession->connection[i].ncci == 0) {
+			phsession->connection[i].id = id++;
+			phsession->connection[i].state = STATE_IDLE;
+			return &phsession->connection[i];
 		}
 	}
 
@@ -177,12 +188,12 @@ void capi_hangup(struct capi_connection *connection)
 		g_debug("REQ: DISCONNECT - plci %ld", connection->plci);
 
 		isdn_lock();
-		info = DISCONNECT_REQ(&cmsg1, session->appl_id, 1, connection->plci, NULL, NULL, NULL, NULL);
+		info = DISCONNECT_REQ(&cmsg1, phsession->appl_id, 1, connection->plci, NULL, NULL, NULL, NULL);
 		isdn_unlock();
 
 		if (info != 0) {
 			connection->state = STATE_IDLE;
-			session->handlers->status(connection, info);
+			phsession->handlers->status(connection, info);
 		} else {
 			connection->state = STATE_DISCONNECT_ACTIVE;
 		}
@@ -192,17 +203,17 @@ void capi_hangup(struct capi_connection *connection)
 		g_debug("REQ: DISCONNECT_B3 - ncci %ld", connection->ncci);
 
 		isdn_lock();
-		info = DISCONNECT_B3_REQ(&cmsg1, session->appl_id, 1, connection->ncci, NULL);
+		info = DISCONNECT_B3_REQ(&cmsg1, phsession->appl_id, 1, connection->ncci, NULL);
 		isdn_unlock();
 
 		if (info != 0) {
 			/* retry with disconnect on whole connection */
 			isdn_lock();
-			info = DISCONNECT_REQ(&cmsg1, session->appl_id, 1, connection->plci, NULL, NULL, NULL, NULL);
+			info = DISCONNECT_REQ(&cmsg1, phsession->appl_id, 1, connection->plci, NULL, NULL, NULL, NULL);
 			isdn_unlock();
 			if (info != 0) {
 				connection->state = STATE_IDLE;
-				session->handlers->status(connection, info);
+				phsession->handlers->status(connection, info);
 			} else {
 				connection->state = STATE_DISCONNECT_ACTIVE;
 			}
@@ -215,11 +226,11 @@ void capi_hangup(struct capi_connection *connection)
 		g_debug("RESP: CONNECT - plci %ld", connection->plci);
 
 		isdn_lock();
-		info = CONNECT_RESP(&cmsg1, session->appl_id, session->message_number++, connection->plci, 3, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+		info = CONNECT_RESP(&cmsg1, phsession->appl_id, phsession->message_number++, connection->plci, 3, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 		isdn_unlock();
 		connection->state = STATE_IDLE;
 		if (info != 0) {
-			session->handlers->status(connection, info);
+			phsession->handlers->status(connection, info);
 		}
 
 		break;
@@ -265,7 +276,7 @@ struct capi_connection *capi_call(
 	int err = 0;
 	int intern = (trg_no[0] == '*') || (trg_no[0] == '#');
 
-	if (!session) {
+	if (!phsession) {
 		return NULL;
 	}
 
@@ -329,7 +340,7 @@ struct capi_connection *capi_call(
 			/* CAPI Message */
 			&cmsg,
 			/* Application ID */
-			session->appl_id,
+			phsession->appl_id,
 			/* Message Number */
 			0,
 			/* Controller */
@@ -539,8 +550,8 @@ static struct capi_connection *capi_find_plci(int plci)
 	int index;
 
 	for (index = 0; index < CAPI_CONNECTIONS; index++) {
-		if (session->connection[index].plci == plci) {
-			return &session->connection[index];
+		if (phsession->connection[index].plci == plci) {
+			return &phsession->connection[index];
 		}
 	}
 
@@ -556,8 +567,8 @@ static struct capi_connection *capi_find_new(void)
 	int index;
 
 	for (index = 0; index < CAPI_CONNECTIONS; index++) {
-		if (session->connection[index].plci == 0 && session->connection[index].type != 0) {
-			return &session->connection[index];
+		if (phsession->connection[index].plci == 0 && phsession->connection[index].type != 0) {
+			return &phsession->connection[index];
 		}
 	}
 
@@ -574,8 +585,8 @@ static struct capi_connection *capi_find_ncci(int ncci)
 	int index;
 
 	for (index = 0; index < CAPI_CONNECTIONS; index++) {
-		if (session->connection[index].ncci == ncci) {
-			return &session->connection[index];
+		if (phsession->connection[index].ncci == ncci) {
+			return &phsession->connection[index];
 		}
 	}
 
@@ -590,19 +601,19 @@ static int capi_close(void)
 {
 	int index;
 
-	if (session != NULL && session->appl_id != -1) {
+	if (phsession != NULL && phsession->appl_id != -1) {
 		for (index = 0; index < CAPI_CONNECTIONS; index++) {
 			printf("In capi_close, Index: %i\n",index);
-			if (session->connection[index].plci != 0 || session->connection[index].ncci != 0) {
-				capi_hangup(&session->connection[index]);
+			if (phsession->connection[index].plci != 0 || phsession->connection[index].ncci != 0) {
+				capi_hangup(&phsession->connection[index]);
 				g_usleep(25);
 			}
 		}
 
-		printf("In capi_close, vor capi20_release, session->appl_id: %i\n",session->appl_id);
-		CAPI20_RELEASE(session->appl_id);
+		printf("In capi_close, vor capi20_release, phsession->appl_id: %i\n",phsession->appl_id);
+		CAPI20_RELEASE(phsession->appl_id);
 		printf("In capi_close, nach capi20_release\n");
-		session->appl_id = -1;
+		phsession->appl_id = -1;
 	}
 
 	return 0;
@@ -621,12 +632,12 @@ static void capi_resp_connection(int plci, unsigned int ignore)
 		/* *ring* */
 		g_debug("REQ: ALERT - plci %d", plci);
 		isdn_lock();
-		ALERT_REQ(&cmsg1, session->appl_id, 0, plci, NULL, NULL, NULL, NULL, NULL);
+		ALERT_REQ(&cmsg1, phsession->appl_id, 0, plci, NULL, NULL, NULL, NULL, NULL);
 		isdn_unlock();
 	} else {
 		/* ignore */
 		isdn_lock();
-		CONNECT_RESP(&cmsg1, session->appl_id, session->message_number++, plci, ignore, 1, 1, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+		CONNECT_RESP(&cmsg1, phsession->appl_id, phsession->message_number++, plci, ignore, 1, 1, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 		isdn_unlock();
 	}
 }
@@ -668,7 +679,7 @@ static void capi_enable_dtmf(struct capi_connection *connection)
 
 	/* 0x01 = DTMF selector */
 	isdn_lock();
-	FACILITY_REQ(&message, session->appl_id, 0/*isdn->message_number++*/, connection->plci, 0x01, (unsigned char *) facility);
+	FACILITY_REQ(&message, phsession->appl_id, 0/*isdn->message_number++*/, connection->plci, 0x01, (unsigned char *) facility);
 	isdn_unlock();
 }
 
@@ -689,7 +700,7 @@ static void capi_get_dtmf_code(struct capi_connection *connection, unsigned char
 		}
 	}
 
-	session->handlers->code(connection, dtmf);
+	phsession->handlers->code(connection, dtmf);
 }
 
 /**
@@ -727,7 +738,7 @@ void capi_send_dtmf_code(struct capi_connection *connection, unsigned char dtmf)
 
 	/* 0x01 = DTMF selector */
 	isdn_lock();
-	FACILITY_REQ(&message, session->appl_id, 0/*isdn->message_number++*/, connection->ncci, 0x01, (unsigned char *) facility);
+	FACILITY_REQ(&message, phsession->appl_id, 0/*isdn->message_number++*/, connection->ncci, 0x01, (unsigned char *) facility);
 	isdn_unlock();
 }
 
@@ -759,7 +770,7 @@ void capi_send_display_message(struct capi_connection *connection, char *text)
 	strncpy((char *) facility + 3, text, len);
 
 	isdn_lock();
-	INFO_REQ(&message, session->appl_id, 0, connection->plci, (unsigned char *) "", (unsigned char *) "", (unsigned char *) "", (unsigned char *) "", (unsigned char *) facility, NULL);
+	INFO_REQ(&message, phsession->appl_id, 0, connection->plci, (unsigned char *) "", (unsigned char *) "", (unsigned char *) "", (unsigned char *) "", (unsigned char *) facility, NULL);
 	isdn_unlock();
 }
 
@@ -832,7 +843,7 @@ static int capi_indication(_cmsg capi_message)
 
 		g_debug("RESP: CAPI_CONNECT_ACTIVE - plci %d", plci);
 		isdn_lock();
-		CONNECT_ACTIVE_RESP(&cmsg1, session->appl_id, session->message_number++, plci);
+		CONNECT_ACTIVE_RESP(&cmsg1, phsession->appl_id, phsession->message_number++, plci);
 		isdn_unlock();
 
 		connection = capi_find_plci(plci);
@@ -848,7 +859,7 @@ static int capi_indication(_cmsg capi_message)
 
 			connection->state = STATE_CONNECT_ACTIVE;
 			if (connection->type == SESSION_PHONE) {
-				connection->audio = session->handlers->audio_open();
+				connection->audio = phsession->handlers->audio_open();
 				if (!connection->audio) {
 					g_warning("Could not open audio. Hangup");
 					capi_hangup(connection);
@@ -858,11 +869,11 @@ static int capi_indication(_cmsg capi_message)
 		} else if (connection->early_b3 == 0) {
 			g_debug("REQ: CONNECT_B3 - nplci %d", plci);
 			isdn_lock();
-			info = CONNECT_B3_REQ(&cmsg1, session->appl_id, 0, plci, 0);
+			info = CONNECT_B3_REQ(&cmsg1, phsession->appl_id, 0, plci, 0);
 			isdn_unlock();
 
 			if (info != 0) {
-				session->handlers->status(connection, info);
+				phsession->handlers->status(connection, info);
 				/* initiate hangup on PLCI */
 				capi_hangup(connection);
 			} else {
@@ -871,7 +882,7 @@ static int capi_indication(_cmsg capi_message)
 
 				connection->state = STATE_CONNECT_ACTIVE;
 				if (connection->type == SESSION_PHONE) {
-					connection->audio = session->handlers->audio_open();
+					connection->audio = phsession->handlers->audio_open();
 					if (!connection->audio) {
 						g_warning("Could not open audio. Hangup");
 						emit_message(0, (gchar*)"Could not open audio. Hangup");
@@ -897,7 +908,7 @@ static int capi_indication(_cmsg capi_message)
 
 		/* Answer the info message */
 		isdn_lock();
-		CONNECT_B3_RESP(&cmsg1, session->appl_id, session->message_number++, ncci, 0, (_cstruct) NULL);
+		CONNECT_B3_RESP(&cmsg1, phsession->appl_id, phsession->message_number++, ncci, 0, (_cstruct) NULL);
 		isdn_unlock();
 
 		if (connection->state == STATE_CONNECT_ACTIVE) {
@@ -923,7 +934,7 @@ static int capi_indication(_cmsg capi_message)
 
 		connection->ncci = ncci;
 		isdn_lock();
-		CONNECT_B3_ACTIVE_RESP(&cmsg1, session->appl_id, session->message_number++, ncci);
+		CONNECT_B3_ACTIVE_RESP(&cmsg1, phsession->appl_id, phsession->message_number++, ncci);
 		isdn_unlock();
 
 		connection->state = STATE_CONNECTED;
@@ -934,7 +945,7 @@ static int capi_indication(_cmsg capi_message)
 		}
 
 		/* notify application about successful call establishment */
-		session->handlers->connected(connection);
+		phsession->handlers->connected(connection);
 		break;
 
 	/* CAPI_DATA_B3 - data - receive/send */
@@ -963,7 +974,7 @@ static int capi_indication(_cmsg capi_message)
 		plci = ncci & 0x0000ffff;
 
 		isdn_lock();
-		FACILITY_RESP(&cmsg1, session->appl_id, session->message_number++, plci, FACILITY_IND_FACILITYSELECTOR(&capi_message), FACILITY_IND_FACILITYINDICATIONPARAMETER(&capi_message));
+		FACILITY_RESP(&cmsg1, phsession->appl_id, phsession->message_number++, plci, FACILITY_IND_FACILITYSELECTOR(&capi_message), FACILITY_IND_FACILITYINDICATIONPARAMETER(&capi_message));
 		isdn_unlock();
 
 		connection = capi_find_plci(plci);
@@ -991,11 +1002,11 @@ static int capi_indication(_cmsg capi_message)
 				/* Retrieve */
 				g_debug("FACILITY: RETRIEVE");
 				isdn_lock();
-				info = CONNECT_B3_REQ(&cmsg1, session->appl_id, 0, plci, 0);
+				info = CONNECT_B3_REQ(&cmsg1, phsession->appl_id, 0, plci, 0);
 				isdn_unlock();
 
 				if (info != 0) {
-					session->handlers->status(connection, info);
+					phsession->handlers->status(connection, info);
 					/* initiate hangup on PLCI */
 					capi_hangup(connection);
 				} else {
@@ -1022,7 +1033,7 @@ static int capi_indication(_cmsg capi_message)
 
 		/* Respond to INFO */
 		isdn_lock();
-		INFO_RESP(&cmsg1, session->appl_id, session->message_number++, plci);
+		INFO_RESP(&cmsg1, phsession->appl_id, phsession->message_number++, plci);
 		isdn_unlock();
 
 		memset(info_element, 0, sizeof(info_element));
@@ -1222,12 +1233,12 @@ static int capi_indication(_cmsg capi_message)
 				g_debug("REQ: CONNECT_B3 - Early-B3");
 
 				isdn_lock();
-				CONNECT_B3_REQ(&cmsg1, session->appl_id, 0, plci, 0);
+				CONNECT_B3_REQ(&cmsg1, phsession->appl_id, 0, plci, 0);
 				isdn_unlock();
 
 				connection->connect_time = time(NULL);
 				if (connection->type == SESSION_PHONE) {
-					connection->audio = session->handlers->audio_open();
+					connection->audio = phsession->handlers->audio_open();
 					if (!connection->audio) {
 						g_warning("Could not open audio. Hangup");
 						emit_message(0, (gchar*)"Could not open audio. Hangup");
@@ -1250,7 +1261,7 @@ static int capi_indication(_cmsg capi_message)
 		plci = ncci & 0x0000ffff;
 
 		isdn_lock();
-		DISCONNECT_B3_RESP(&cmsg1, session->appl_id, session->message_number++, ncci);
+		DISCONNECT_B3_RESP(&cmsg1, phsession->appl_id, phsession->message_number++, ncci);
 		isdn_unlock();
 
 		connection = capi_find_ncci(ncci);
@@ -1280,7 +1291,7 @@ static int capi_indication(_cmsg capi_message)
 
 		g_debug("RESP: DISCONNECT - plci %d", plci);
 		isdn_lock();
-		DISCONNECT_RESP(&cmsg1, session->appl_id, session->message_number++, plci);
+		DISCONNECT_RESP(&cmsg1, phsession->appl_id, phsession->message_number++, plci);
 		isdn_unlock();
 
 		connection = capi_find_plci(plci);
@@ -1297,13 +1308,13 @@ static int capi_indication(_cmsg capi_message)
 
 		switch (connection->type) {
 		case SESSION_PHONE:
-			if (session->input_thread_state == 1) {
-				session->input_thread_state++;
+			if (phsession->input_thread_state == 1) {
+				phsession->input_thread_state++;
 				do {
 					g_usleep(10);
-				} while (session->input_thread_state != 0);
+				} while (phsession->input_thread_state != 0);
 			}
-			session->handlers->audio_close(connection->audio);
+			phsession->handlers->audio_close(connection->audio);
 			break;
 		case SESSION_FAX:
 			/* Fax workaround */
@@ -1313,7 +1324,7 @@ static int capi_indication(_cmsg capi_message)
 			break;
 		}
 
-		session->handlers->disconnected(connection);
+		phsession->handlers->disconnected(connection);
 
 		capi_set_free(connection);
 		break;
@@ -1366,7 +1377,7 @@ static void capi_confirmation(_cmsg capi_message)
 				connection->state = STATE_IDLE;
 			}
 		} else {
-			session->handlers->ring(connection);
+			phsession->handlers->ring(connection);
 		}
 		break;
 	case CAPI_DATA_B3:
@@ -1407,7 +1418,7 @@ static void capi_confirmation(_cmsg capi_message)
 			/* Connection error */
 			connection->state = STATE_IDLE;
 
-			session->handlers->status(connection, info);
+			phsession->handlers->status(connection, info);
 
 			capi_set_free(connection);
 		} else {
@@ -1441,12 +1452,12 @@ static int capi_init(int controller);
  * \param session faxophone session pointer
  * \return error code
  */
-static void faxophone_reconnect(struct session *session)
+static void faxophone_reconnect(struct session *phsession)
 {
 	isdn_lock();
 	capi_close();
 
-	session->appl_id = capi_init(-1);
+	phsession->appl_id = capi_init(-1);
 
 	isdn_unlock();
 }
@@ -1467,10 +1478,10 @@ static gpointer capi_loop(void *user_data)
 		time_val.tv_sec = 1;
 		time_val.tv_usec = 0;
 
-		ret = CAPI20_WaitforMessage(session->appl_id, &time_val);
+		ret = CAPI20_WaitforMessage(phsession->appl_id, &time_val);
 		if (ret == CapiNoError) {
 			isdn_lock();
-			info = capi_get_cmsg(&capi_message, session->appl_id);
+			info = capi_get_cmsg(&capi_message, phsession->appl_id);
 			isdn_unlock();
 
 			switch (info) {
@@ -1489,13 +1500,13 @@ static gpointer capi_loop(void *user_data)
 			case CapiReceiveQueueEmpty:
 				g_warning("Empty queue, even if message pending.. reconnecting");
 				g_usleep(1 * G_USEC_PER_SEC);
-				faxophone_reconnect(session);
+				faxophone_reconnect(phsession);
 				break;
 			default:
 				return NULL;
 			}
 		} else if (!faxophone_quit) {
-			if (session == NULL || session->appl_id == -1) {
+			if (phsession == NULL || phsession->appl_id == -1) {
 				g_usleep(1 * G_USEC_PER_SEC);
 			} else {
 				g_usleep(1);
@@ -1503,7 +1514,7 @@ static gpointer capi_loop(void *user_data)
 		}
 	}
 
-	session = NULL;
+	phsession = NULL;
 
 	return NULL;
 }
@@ -1683,7 +1694,7 @@ struct session *faxophone_init(struct session_handlers *handlers, const char *ho
 
 	create_table_buffer();
 
-	if (session == NULL) {
+	if (phsession == NULL) {
 		if (host != NULL) {
 #if HAVE_CAPI_36
 			capi20ext_set_driver((gchar*)"fritzbox");
@@ -1702,7 +1713,6 @@ struct session *faxophone_init(struct session_handlers *handlers, const char *ho
 			capi_close();
 
 			appl_id = capi_init(-1);
-			printf("appl_id: %i\n",appl_id);
 
 			isdn_unlock();
 		}
@@ -1712,13 +1722,13 @@ struct session *faxophone_init(struct session_handlers *handlers, const char *ho
 
 			return NULL;
 		} else {
-			session = (struct session*)g_slice_alloc0(sizeof(struct session));
+			phsession = (struct session*)g_slice_alloc0(sizeof(struct session));
 
-			g_mutex_init(&session->isdn_mutex);
+			g_mutex_init(&phsession->isdn_mutex);
 
-			session->handlers = handlers;
+			phsession->handlers = handlers;
 
-			session->appl_id = appl_id;
+			phsession->appl_id = appl_id;
 
 			/* start capi transmission loop */
 			faxophone_quit = 0;
@@ -1729,7 +1739,7 @@ struct session *faxophone_init(struct session_handlers *handlers, const char *ho
 		}
 	}
 
-	return session;
+	return phsession;
 }
 
 /**
@@ -1746,8 +1756,8 @@ int faxophone_close(int force)
 	printf("Nach capi_close\n");
 	//}
 
-	if (session != NULL) {
-		/* TODO: clear session! */
+	if (phsession != NULL) {
+		/* TODO: clear phsession! */
 		faxophone_quit = 1;
 		if (capi_thread != NULL) {
 			g_thread_join(capi_thread);
@@ -1756,7 +1766,7 @@ int faxophone_close(int force)
 		capi_thread = NULL;
 	}
 
-	session = NULL;
+	phsession = NULL;
 
 	return 0;
 }
@@ -1767,5 +1777,5 @@ int faxophone_close(int force)
  */
 struct session *faxophone_get_session(void)
 {
-	return session;
+	return phsession;
 }

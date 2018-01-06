@@ -227,6 +227,7 @@ gboolean routermanager_init(GError **error)
 	// profile_init();
 
 	/* Initialize network monitor */
+	// GSchade ginge auch ohne 
 	net_monitor_init();
 
 	return TRUE;
