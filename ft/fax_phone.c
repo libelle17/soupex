@@ -27,19 +27,19 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include <libroutermanager/appobject-emit.h>
-#include <libroutermanager/net_monitor.h>
-#include <libroutermanager/profile.h>
-#include <libroutermanager/router.h>
-#include <libroutermanager/audio.h>
-#include <libroutermanager/call.h>
-#include <libroutermanager/gstring.h>
+#include "appobject-emit.h"
+#include "net_monitor.h"
+#include "profile.h"
+#include "router.h"
+#include "audio.h"
+#include "call.h"
+#include "gstring.h"
 
-#include <libfaxophone/faxophone.h>
-#include <libfaxophone/fax.h>
-#include <libfaxophone/sff.h>
-#include <libfaxophone/phone.h>
-#include <libfaxophone/ringtone.h>
+#include "faxophone.h"
+#include "fax.h"
+#include "sff.h"
+#include "phone.h"
+#include "ringtone.h"
 
 #define RM_ERROR 
 
